@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import {Link} from 'react-router'
+import { browserHistory } from 'react-router';
 
+import Search from "./Search"
 
 import "../css/navbar.css"
 import "../css/header.css"
@@ -9,7 +11,9 @@ export default class Header extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {choose : "Contract"};
+        this.state = {
+            choose : "Contract"
+        };
     }
     
     componentDidMount() {
@@ -46,8 +50,12 @@ export default class Header extends Component {
         this.setState({choose : "Notary"});
     }
 
-    checkAuth= () => {
-        
+    find = () => {
+        this.props.app.setState({
+            typeSearch : this.state.choose,
+            currentAddress : document.getElementById("addressInput").value
+        });
+        browserHistory.push("/search");
     }
 
     render() {
@@ -59,12 +67,13 @@ export default class Header extends Component {
                 </div>
                 <ul id="navbar">
 
-                    <li>{this.props.authorized ? <Link to={"/profile"}>Profile</Link> : <li><Link>Profile</Link></li>}</li>
-                    <li>{this.props.authorized ? <Link to={"/documents"}>Documents</Link> : <li><Link>Documents</Link></li>}</li>
+                    <li>{this.props.authorized ? <Link to={"/profile"}>Profile</Link> : <Link>Profile</Link>}</li>
+                    <li>{this.props.authorized ? <Link to={"/add_document"}>Add Document</Link> : <Link>Add Document</Link>}</li>
+                    <li>{this.props.authorized ? <Link to={"/documents"}>Documents</Link> : <Link>Documents</Link>}</li>
                     
                     <div className="search-container">
-                        <input type="text" placeholder="Search.."/>
-                        <button className="button-submit">Search</button>
+                        <input type="text" placeholder="Search.." id="addressInput"/>
+                        <button onClick={this.find} className="button-submit">Search</button>
                     </div>  
 
                     <li className="dropdown">

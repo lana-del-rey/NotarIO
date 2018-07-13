@@ -7,7 +7,10 @@ export default class Shell extends Component {
     render() {
         return (
             <div>
-                <Header authorized = {this.props.application.state.authorized}/>
+                <Header 
+                        authorized = {this.props.application.state.authorized}
+                        app = {this.props.application}
+                />
                 <div>
                     {this.props.children}
                 </div>

@@ -14,3 +14,32 @@
 .container {
     padding: 2px 2px;
 }
+
+
+.container button {
+    color: white;
+    padding: 5px 5px;
+    margin: 4px 0;
+    background-color: #1abc9c;
+    cursor: pointer;
+    width: 100%;
+    outline: none;
+    opacity: 0.9;
+    border-radius:5px;
+}
+
+.container button:hover {
+    opacity:1;
+}
+
+/* Extra styles for the cancel button */
+.container .cancelbtn {
+    padding: 5px 5px;
+    background-color: #f44336;
+}
+
+/* Float cancel and signup buttons and add an equal width */
+.container .cancelbtn,.sign-up .signupbtn {
+  float: left;
+  width: 100%;
+}

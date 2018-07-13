@@ -5,13 +5,13 @@ import "../css/content.css"
 import AgreementFactory from "../../abi/AgreementFactory.json"
 import OneSideAgreement from "../../abi/OneSideAgreement.json"
 
-export default class AllDocuments extends Component {
+export default class Search extends Component {
 
     constructor(props) {
         super(props);
-        const contract = props.application.state.web3.eth.contract(AgreementFactory["abi"]);
+        const agreementFactoryContract = props.application.state.web3.eth.contract(AgreementFactory["abi"]);
         this.state = {
-            agreementFactoryInstance : contract.at(props.application.state.agreementFactoryAddress),
+            agreementFactoryInstance : agreementFactoryContract.at(props.application.state.agreementFactoryAddress),
             docs : []
         };
     }
@@ -74,28 +74,49 @@ export default class AllDocuments extends Component {
 
     componentWillMount() {
         const agreement = this.props.application.state.web3.eth.contract(OneSideAgreement["abi"]);
-        
-        this.state.agreementFactoryInstance.GetAgreements(
-            this.props.application.state.address,
-            (err, res) => {
-                for (var i = 0; i < res.length; i++) {
-                    var inst = agreement.at(res[i]);
-                                
-                    this.setState({docs : [...this.state.docs, 
-                    {
-                        address : "...",
-                        notar : "...",
-                        data : "...",
-                        client : "...",
-                        benefitiars : [],
-                        status : "...",
-                        instance : inst
-                    }]});
+        var typeSearch = this.props.application.state.typeSearch;
+        var currentAddress = this.props.application.state.currentAddress;
 
-                    this.onElem(i, res[i], inst);                            
-                }      
-            }
-        );
+        if (typeSearch == "Contract") {
+            var inst = agreement.at(currentAddress);
+            var el = this.state.docs;
+            el.push({
+                address : "...",
+                notar : "...",
+                data : "...",
+                client : "...",
+                benefitiars : [],
+                status : "...",
+                instance : inst
+            });
+
+            this.setState({docs : el});
+                
+            this.onElem(0, currentAddress, inst);                            
+        } else if (typeSearch == "Client" || typeSearch == "Notary") {
+            var agreementFactoryInstance = this.state.agreementFactoryInstance;
+            agreementFactoryInstance.GetAgreements(
+                currentAddress,
+                (err, res) => {
+                    for (var i = 0; i < res.length; i++) {
+                        var inst = agreement.at(res[i]);
+                                    
+                        this.setState({docs : [...this.state.docs, 
+                        {
+                            address : "...",
+                            notar : "...",
+                            data : "...",
+                            client : "...",
+                            benefitiars : [],
+                            status : "...",
+                            instance : inst
+                        }]});
+    
+                        this.onElem(i, res[i], inst);                            
+                    }      
+                }  
+            );
+        }
     }
 
     render() {
@@ -105,7 +126,7 @@ export default class AllDocuments extends Component {
                                     info={this.state.docs[i]}
                                     app={this.props.application}
                             />);
-        } 
+        }
 
         return (
             <div className="list">
